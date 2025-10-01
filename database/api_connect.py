@@ -105,7 +105,7 @@ def update_items():
     ids_to_fetch = __difference(items_ids, known_items_ids)
     
     param_query = """
-        INSERT INTO items (item_id, name, description, type, rarity, level, detailed_type, weight) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO items (item_id, name, description, type, rarity, level, detailed_type, weight, upgrade_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """
     
     print(f"Found {len(ids_to_fetch)} new items")
@@ -126,6 +126,7 @@ def update_items():
             if detailsObject is not None:
                 params[6] = detailsObject.get("type")
                 params[7] = detailsObject.get("weight_class")
+            params[8] = item.get("suffix_item_id")
             
             database.push_to_database(param_query, tuple(params))
         

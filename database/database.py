@@ -48,8 +48,7 @@ def __create_items(conn):
             'level' INTEGER NOT NULL,
             'detailed_type' TEXT,
             'weight' TEXT,
-            'buy_price' INTEGER,
-            'sell_price' INTEGER
+            'upgrade_id' INTEGER
             )
     """
     
