@@ -13,7 +13,7 @@ import sys
 
 
 #TODO: change to not only work on windows
-load_dotenv(dotenv_path="../config/.env")
+load_dotenv(dotenv_path="config/.env")
 
 DB_NAME = os.getenv("DB_NAME")
 

@@ -5,7 +5,7 @@ Created on Wed Oct  1 19:43:31 2025
 @author: feysn
 """
 
-from database import database, api_connect
+from db import database, api_connect
 
 
 if __name__ == "__main__":

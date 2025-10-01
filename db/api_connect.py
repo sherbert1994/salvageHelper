@@ -6,7 +6,7 @@ Created on Wed Oct  1 14:47:33 2025
 """
 
 import requests
-from database import database
+from db import database
 import math
 
 BASE_URL = "https://api.guildwars2.com/v2/"
@@ -115,18 +115,22 @@ def update_items():
         items = get_items_data(ids_to_fetch[i:i+BATCH_SIZE])
         
         for item in items:
-            params = [None, None, None, None, None, None, None, None]
-            params[0] = item.get("id")
-            params[1] = item.get("name")
-            params[2] = item.get("description")
-            params[3] = item.get("type")
-            params[4] = item.get("rarity")
-            params[5] = item.get("level")
+            params = []
+            params.append(item.get("id"))
+            params.append(item.get("name"))
+            params.append(item.get("description"))
+            params.append(item.get("type"))
+            params.append(item.get("rarity"))
+            params.append(item.get("level"))
             detailsObject = item.get("details")
             if detailsObject is not None:
-                params[6] = detailsObject.get("type")
-                params[7] = detailsObject.get("weight_class")
-            params[8] = item.get("suffix_item_id")
+                params.append(detailsObject.get("type"))
+                params.append(detailsObject.get("weight_class"))
+                params.append(detailsObject.get("suffix_item_id"))
+            else:
+                params.extend([None]*3)
+            
+            print(tuple(params))
             
             database.push_to_database(param_query, tuple(params))
         
