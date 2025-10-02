@@ -54,18 +54,22 @@ def update_itemstats():
     
     print(f"Found {len(ids_to_fetch)} new itemstats")
     
+    params_list : list[tuple] = []
     
     for i in range(0, len(ids_to_fetch), BATCH_SIZE):
         iterations = math.ceil(len(ids_to_fetch)/100)
         itemstats = get_itemstats_data(ids_to_fetch[i:i+BATCH_SIZE])
         
         for itemstat in itemstats:
-            params = [None, None]
-            params[0] = itemstat["id"]
-            params[1] = itemstat["name"]
-            database.push_to_database(param_query, tuple(params))
-            
+            params = []
+            params.append(itemstat["id"])
+            params.append(itemstat["name"])  
+        
+            params_list.append(params)
         print(f"Finished iteration {int((i/100) + 1)} out of {iterations}")
+        
+        
+    database.push_to_database(param_query, params_list)
     
 def get_item_ids() -> list[int]:
     url = BASE_URL + "items"
@@ -105,10 +109,14 @@ def update_items():
     ids_to_fetch = __difference(items_ids, known_items_ids)
     
     param_query = """
-        INSERT INTO items (item_id, name, description, type, rarity, level, detailed_type, weight, upgrade_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO items 
+        (item_id, name, description, type, rarity, level, detailed_type, 
+         weight, upgrade_id, itemstat_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """
     
     print(f"Found {len(ids_to_fetch)} new items")
+    params_list : list(tuple) = []
     
     for i in range(0, len(ids_to_fetch), BATCH_SIZE):
         iterations = math.ceil(len(ids_to_fetch)/100)
@@ -122,19 +130,24 @@ def update_items():
             params.append(item.get("type"))
             params.append(item.get("rarity"))
             params.append(item.get("level"))
-            detailsObject = item.get("details")
-            if detailsObject is not None:
-                params.append(detailsObject.get("type"))
-                params.append(detailsObject.get("weight_class"))
-                params.append(detailsObject.get("suffix_item_id"))
+            details_object = item.get("details")
+            if details_object is not None:
+                params.append(details_object.get("type"))
+                params.append(details_object.get("weight_class"))
+                params.append(details_object.get("suffix_item_id"))
+                itemstat_object = details_object.get("infix_upgrade")
+                if itemstat_object is not None:
+                    params.append(itemstat_object.get("id"))
+                else:
+                    params.append(None)
             else:
-                params.extend([None]*3)
-            
-            print(tuple(params))
-            
-            database.push_to_database(param_query, tuple(params))
+                params.extend([None]*4)
+                
+            params_list.append(tuple(params))
         
-        print(f"Finished iteration {int((i/100) + 1)} out of {iterations}")   
+        print(f"Finished iteration {int((i/100) + 1)} out of {iterations}") 
+        
+    database.push_to_database(param_query, params_list)
 
 def __difference(all_ids: list[int], known_ids: list[int]) -> list[int]:
     all_ids = set(all_ids)
