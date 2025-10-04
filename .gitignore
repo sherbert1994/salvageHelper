@@ -1,5 +1,4 @@
 .spyproject/
-
 config/.env
-
 *.db
+*.csv
