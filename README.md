@@ -24,5 +24,5 @@ Profits can be sorted by:
 - Buy order of items
 
 Sorted list can be:
-- Viewed in terminal (top 50 most profitable)
+- Viewed in terminal (top 50 most profitable items)
 - Exported as csv (all items)
