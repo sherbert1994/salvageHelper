@@ -13,16 +13,14 @@ import sys
 
 load_dotenv(dotenv_path="config/.env")
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_NAME = os.getenv("DB_NAME")
 
-def create():
+def create():    
     try:
         conn = get_connection()
         __create_itemstats(conn)
         __create_items(conn)
-    except Error as e:
-        print("Issue trying to connect to the sqlite database")
-        print(e)
     finally:    
         conn.close()
 
