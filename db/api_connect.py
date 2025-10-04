@@ -60,7 +60,7 @@ def update_itemstats():
     params_list = []
     
     for i in range(0, len(ids), BATCH_SIZE):
-        iterations = math.ceil(len(ids)/100)
+        iterations = math.ceil(len(ids)/BATCH_SIZE)
         itemstats = get_json_data(ENDPOINT, ids[i:i+BATCH_SIZE])
         
         for itemstat in itemstats:
@@ -89,7 +89,7 @@ def update_items():
     params_list = []
     
     for i in range(0, len(ids), BATCH_SIZE):
-        iterations = math.ceil(len(ids)/100)
+        iterations = math.ceil(len(ids)/BATCH_SIZE)
         items = get_json_data(ENDPOINT, ids[i:i+BATCH_SIZE])
         
         for item in items:
