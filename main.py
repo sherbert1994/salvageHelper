@@ -30,7 +30,7 @@ def print_to_terminal(itemlist, instantbuy):
         if instantbuy == "Y":
             print(f"{item.name:_<50}{item.value:_>20.0f}")
         else:
-            print(f"{item.name:_<50}{item.buy_price:>20.0f}")
+            print(f"{item.name:_<50}{item.buy_price:_>20.0f}")
         
 def get_column_names(instantbuy):
     name = "ITEM NAME"

@@ -41,11 +41,9 @@ def __get_items(cursor, salvageKit, itemtype):
         return __get_weapons(items, salvageKit)
     elif itemtype == "Armor":
         return __get_armors(items, salvageKit)
-    elif itemtype == "Trinket":
-        return __get_trinkets(items, salvageKit)
-    elif itemtype == "Back":
-        return __get_backpacks(items, salvageKit)
-        
+    elif itemtype == "Trinket" or itemtype == "Back":
+        return __get_generic_items(items, salvageKit)
+ 
         
     
 def __get_weapons(weapons, salvageKit):
@@ -68,21 +66,11 @@ def __get_armors(armors, salvageKit):
     return armorlist
         
 
-def __get_trinkets(trinkets, salvageKit):
-    trinketlist = []
+def __get_generic_items(items, salvageKit):
+    itemlist = []
 
-    for trinket in trinkets:
-        if trinket[0] in sellable_items_list:
-            trinketlist.append(items.Trinket(trinket, salvageKit))
+    for item in itemlist:
+        if item[0] in sellable_items_list:
+            itemlist.append(items.Item(item, salvageKit))
     
-    return trinketlist
-    
-    
-def __get_backpacks(backpacks, salvageKit):
-    backpacklist = []
-
-    for backpack in backpacks:
-        if backpack[0] in sellable_items_list:
-            backpacklist.append(items.Backpack(backpack, salvageKit))
-            
-    return backpacklist
+    return itemlist

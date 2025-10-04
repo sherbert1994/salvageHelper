@@ -25,6 +25,7 @@ class Item():
         "SF": 0.4,
         "BLSK": 0.6
         }
+    stats_salvage = {} # empty for generic items, overriden by Armor and Weapon subclass
     
     
     def __init__(self, data : tuple, salvageKit: str):
@@ -35,21 +36,7 @@ class Item():
         self.salvageKit = salvageKit
         self.buy_price = self.item_prices.loc[self.item_prices["id"] == self.item_id,"buy_price"].iloc[0]
         self.sell_price = self.item_prices.loc[self.item_prices["id"] == self.item_id,"buy_price"].iloc[0]
-    
-class Armor(Item):
-    # maps weapons stats to the insignia salvaged from them
-    # only 6 stats have this property
-    stats_salvage = {
-        "Cavalier's": 46709,
-        "Dire": 49522,
-        "Magi's": 46711,
-        "Rabid": 46710,
-        "Shaman's": 46708,
-        "Soldier's": 46712
-        }
-    
-    def __init__(self, data: tuple, salvageKit: str):
-        super().__init__(data, salvageKit)
+        
         self.detailed_type = data[4]
         self.upgrade_id = data[5]
         self.itemstat = data[6]
@@ -60,7 +47,6 @@ class Armor(Item):
         self.buy_profit = self.value - self.buy_price
         #profit if item bought at sell_price (instabuy)
         self.sell_profit = self.value - self.buy_price
-        
         
     def get_value(self):
         if self.upgrade_id is not None and self.upgrade_id in self.item_prices["id"].values:
@@ -79,6 +65,18 @@ class Armor(Item):
         return (self.ecto_price * self.ectos.get(self.salvageKit) + upgrade_price \
                  + insignia_price * self.stats_salvage_rate.get(self.salvageKit)) * 0.85 \
                  - self.salvage_cost.get(self.salvageKit)
+    
+class Armor(Item):
+    # maps weapons stats to the insignia salvaged from them
+    # only 6 stats have this property
+    stats_salvage = {
+        "Cavalier's": 46709,
+        "Dire": 49522,
+        "Magi's": 46711,
+        "Rabid": 46710,
+        "Shaman's": 46708,
+        "Soldier's": 46712
+    }
 
         
 class Weapon(Item):
@@ -92,91 +90,5 @@ class Weapon(Item):
         "Shaman's": 46684,
         "Soldier's": 46688
         }
-    
-    
-    def __init__(self, data: tuple, salvageKit: str):
-        super().__init__(data, salvageKit)
-        self.detailed_type = data[4]
-        self.upgrade_id = data[5]
-        self.itemstat = data[6]
-        self.value = self.get_value()
-        
-        #profit if item bought at buy_price
-        self.buy_profit = self.value - self.buy_price
-        #profit if item bought at sell_price (instabuy)
-        self.sell_profit = self.value - self.buy_price
-        
-    """
-        Returns the value of an item when we extract and salvage
-        (We always do these together as only salvaging is always lower profit)
-    """    
-    def get_value(self, salvageKit="SF") -> float:
-        if self.upgrade_id is not None and self.upgrade_id in self.item_prices["id"].values:
-            upgrade_price = self.item_prices.loc[self.item_prices["id"] == self.upgrade_id,"sell_price"].iloc[0]
-        else:
-            upgrade_price = 0
-            
-        inscription_id = self.stats_salvage.get(self.itemstat)
-        if inscription_id is not None:
-            inscription_price = self.item_prices.loc[self.item_prices["id"] == inscription_id, "sell_price"].iloc[0]
-        else:
-            inscription_price = 0
-           
-        
-        # amount of ectos * their price + price of the upgrade + avg_inscriptions * their price
-        # all multiplied by 0.85 to account for taxes incurred, then the cost of doing a salvage is subtracted
-        return (self.ecto_price * self.ectos.get(salvageKit) + upgrade_price \
-                + inscription_price * self.stats_salvage_rate.get(salvageKit)) * 0.85 \
-                - self.salvage_cost.get(salvageKit)
-        
-        
-class Trinket(Item):
-    
-    def __init__(self, data: tuple, salvageKit: str):
-        super().__init__(data, salvageKit)
-        self.detailed_type = data[4]
-        self.upgrade_id = data[5]
-        self.itemstat = data[6]
-        self.value = self.get_value()
-        
-        #profit if item bought at buy_price
-        self.buy_profit = self.value - self.buy_price
-        #profit if item bought at sell_price (instabuy)
-        self.sell_profit = self.value - self.buy_price
-        
-    def get_value(self, salvageKit="SF") -> float:
-        if self.upgrade_id is not None and self.upgrade_id in self.item_prices["id"].values:
-            upgrade_price = self.item_prices.loc[self.item_prices["id"] == self.upgrade_id, "sell_price"].iloc[0]
-        else:
-            upgrade_price = 0
-        
-        # amount of ectos * their price + price of the upgrrade
-        # all multiplied by 0.85 to account for taxes incurred, then the cost of doing a salvage is subracted
-        return (self.ecto_price * self.ectos.get(salvageKit) + upgrade_price) * 0.85 - self.salvage_cost.get(salvageKit)
-        
-
-class Backpack(Item):
-    
-    def __init__(self, data: tuple, salvageKit: str):
-        super().__init__(data, salvageKit)
-        self.detailed_type = data[4]
-        self.upgrade_id = data[5]
-        self.itemstat = data[6]
-        self.value = self.get_value()
-        
-        #profit if item bought at buy_price
-        self.buy_profit = self.value - self.buy_price
-        #profit if item bought at sell_price (instabuy)
-        self.sell_profit = self.value - self.buy_price
-        
-    def get_value(self, salvageKit="SF") -> float:
-        if self.upgrade_id is not None and self.upgrade_id in self.item_prices["id"].values:
-            upgrade_price = self.item_prices.loc[self.item_prices["id"] == self.upgrade_id, "sell_price"].iloc[0]
-        else:
-            upgrade_price = 0
-        
-        # amount of ectos * their price + price of the upgrrade
-        # all multiplied by 0.85 to account for taxes incurred, then the cost of doing a salvage is subracted
-        return (self.ecto_price * self.ectos.get(salvageKit) + upgrade_price) * 0.85 - self.salvage_cost.get(salvageKit)
     
         
