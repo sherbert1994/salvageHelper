@@ -51,41 +51,22 @@ def __create_items(conn):
     
     conn.execute(query)
        
-def push_to_database(param_query: str, params_list: list[tuple]):
+def push_to_database(param_query, params_list):
     try:
         conn = get_connection()
         cursor = conn.cursor()  
-        
         cursor.executemany(param_query, params_list)
         conn.commit()
-    except Error as e:
-        print("Issue trying to connect to the sqlite database")
-        print(e)
     finally:
         conn.close()
         
-def get_known_itemstats_ids() -> list[int]:
-    known_ids = []
-    query = "SELECT itemstat_id FROM itemstats"
-    try:
-        conn = get_connection()
-        cursor = conn.cursor()
-        ids = cursor.execute(query)
-        for i in ids:
-            known_ids.append(i[0])
-        
-    except Error as e:
-        print("Issue trying to connect to the sqlite database")
-        print(e)
-    finally:
-        conn.close()
+def get_known_ids(table_name):
+    if table_name == "itemstats":
+        query = "SELECT itemstat_id FROM itemstats"
+    elif table_name == "items":
+        query = "SELECT item_id FROM items"
+    known_ids= []
     
-    return known_ids
-
-
-def get_known_items_ids() -> list[int]:
-    known_ids = []
-    query = "SELECT item_id FROM items"
     try:
         conn = get_connection()
         cursor = conn.cursor()

@@ -45,7 +45,7 @@ def get_itemstats_data(ids : list[int]) -> list[dict]:
 def update_itemstats():
     BATCH_SIZE = 100 #max amount of ids we can request in one go
     itemstats_ids = get_itemstats_ids() # all itemstats ids that are exposed by the GW2 API
-    known_itemstats_ids = database.get_known_itemstats_ids()
+    known_itemstats_ids = database.get_known_ids("itemstats")
     ids_to_fetch = __difference(itemstats_ids, known_itemstats_ids)
     
     param_query = """
@@ -105,7 +105,7 @@ def get_items_data(ids: list[int]) -> list[dict]:
 def update_items():
     BATCH_SIZE = 100
     items_ids = get_item_ids() # all item ids that are exposed by the GW2 API
-    known_items_ids = database.get_known_items_ids()
+    known_items_ids = database.get_known_ids("items")
     ids_to_fetch = __difference(items_ids, known_items_ids)
     
     param_query = """
