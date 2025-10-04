@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import os
 import sqlite3
 from sqlite3 import Error
+
 import sys
 
 load_dotenv(dotenv_path="config/.env")
@@ -23,7 +24,7 @@ def create():
         __create_items(conn)
     finally:    
         conn.close()
-
+        
 def __create_itemstats(conn):
     query = """
         CREATE TABLE IF NOT EXISTS 'itemstats' (
@@ -85,7 +86,3 @@ def get_connection():
         print("Issue trying to connect to the sqlite database")
         print(e)
         sys.exit(1)
-
-if __name__ == "__main__":
-    create()
-
