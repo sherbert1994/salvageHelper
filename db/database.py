@@ -31,8 +31,12 @@ def __create_itemstats(conn):
             'itemstat_id' INTEGER NOT NULL,
             'name' TEXT NOT NULL,
             PRIMARY KEY('itemstat_id'));"""
-    
-    conn.execute(query)
+    try:
+        conn.execute(query)
+    except Error as e:
+        print("Failed to create itemstats table, exiting program...")
+        print(e)
+        sys.exit(1)
     
 def __create_items(conn):
     query = """
@@ -50,7 +54,12 @@ def __create_items(conn):
             )
     """
     
-    conn.execute(query)
+    try:
+        conn.execute(query)
+    except Error as e:
+        print("Failed to create items table, exiting program...")
+        print(e)
+        sys.exit(1)
        
 def push_to_database(param_query, params_list):
     try:
@@ -58,6 +67,9 @@ def push_to_database(param_query, params_list):
         cursor = conn.cursor()  
         cursor.executemany(param_query, params_list)
         conn.commit()
+    except Error as e:
+        print("Could not push to the database, skipping new rows")
+        print(e)
     finally:
         conn.close()
         
@@ -74,9 +86,13 @@ def get_known_ids(table_name):
         ids = cursor.execute(query)
         for i in ids:
             known_ids.append(i[0])
+    except Error as e:
+        print("Could not retrieve from the database, exiting program...")
+        print(e)
+        sys.exit(1)
     finally:
         conn.close()
-    
+
     return known_ids
      
 def get_connection():

@@ -46,7 +46,7 @@ class Item():
         #profit if item bought at buy_price
         self.buy_profit = self.value - self.buy_price
         #profit if item bought at sell_price (instabuy)
-        self.sell_profit = self.value - self.buy_price
+        self.sell_profit = self.value - self.sell_price
         
     def get_value(self):
         if self.upgrade_id is not None and self.upgrade_id in self.item_prices["id"].values:
