@@ -35,7 +35,7 @@ class Item():
         self.level = data[3]
         self.salvageKit = salvageKit
         self.buy_price = self.item_prices.loc[self.item_prices["id"] == self.item_id,"buy_price"].iloc[0]
-        self.sell_price = self.item_prices.loc[self.item_prices["id"] == self.item_id,"buy_price"].iloc[0]
+        self.sell_price = self.item_prices.loc[self.item_prices["id"] == self.item_id,"sell_price"].iloc[0]
         
         self.detailed_type = data[4]
         self.upgrade_id = data[5]
