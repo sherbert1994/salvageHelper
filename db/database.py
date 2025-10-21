@@ -22,6 +22,9 @@ def create():
         conn = get_connection()
         __create_itemstats(conn)
         __create_items(conn)
+    except Error as e:
+        print("Failed to create database. Is your .env file set up correctly?")
+        print(e)
     finally:    
         conn.close()
         
