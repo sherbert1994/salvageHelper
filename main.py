@@ -40,6 +40,8 @@ def get_column_names(instantbuy):
         price = "CURRENT PRICE"
     return (name, price)
 
+print("Please note that the GW2 API will be done from 24/10/25 until 30/10/25.")
+print("Data will be stale until then.")
 #create the database if it does not yet exist
 database.create()
     
