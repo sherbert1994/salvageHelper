@@ -22,6 +22,7 @@ def create():
         conn = get_connection()
         __create_itemstats(conn)
         __create_items(conn)
+        __create_recipes(conn)
     except Error as e:
         print("Failed to create database. Is your .env file set up correctly?")
         print(e)
@@ -63,7 +64,44 @@ def __create_items(conn):
         print("Failed to create items table, exiting program...")
         print(e)
         sys.exit(1)
-       
+
+def __create_recipes(conn):
+    query = """
+        CREATE TABLE IF NOT EXISTS 'recipes' (
+            'recipe_id' INTEGER NOT NULL,
+            'output_id' INTEGER NOT NULL,
+            'output_count' INTEGER NOT NULL,
+            'item_1_id' INTEGER NOT NULL,
+            'item_1_count' INTEGER NOT NULL,
+            'item_2_id' INTEGER,
+            'item_2_count' INTEGER,
+            'item_3_id' INTEGER,
+            'item_3_count' INTEGER,
+            'item_4_id' INTEGER,
+            'item_4_count' INTEGER,
+            'item_5_id' INTEGER,
+            'item_5_count' INTEGER,
+            'artificer' BOOLEAN NOT NULL,
+            'armorsmith' BOOLEAN NOT NULL,
+            'chef' BOOLEAN NOT NULL,
+            'homesteader' BOOLEAN NOT NULL,
+            'huntsman' BOOLEAN NOT NULL,
+            'jeweler' BOOLEAN NOT NULL,
+            'leatherworker' BOOLEAN NOT NULL,
+            'tailor' BOOLEAN NOT NULL,
+            'weaponsmith' BOOLEAN NOT NULL,
+            'scribe' BOOLEAN NOT NULL,
+            'other' BOOLEAN NOT NULL
+            )
+    """
+    
+    try:
+        conn.execute(query)
+    except Error as e:
+        print("Failed to create recipes table, exiting program...")
+        print(e)
+        sys.exit(1)
+        
 def push_to_database(param_query, params_list):
     try:
         conn = get_connection()
@@ -81,6 +119,8 @@ def get_known_ids(table_name):
         query = "SELECT itemstat_id FROM itemstats"
     elif table_name == "items":
         query = "SELECT item_id FROM items"
+    elif table_name == "recipes":
+        query = "SELECT recipe_id FROM recipes"
     known_ids= []
     
     try:

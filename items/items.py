@@ -9,6 +9,7 @@ from items import tradingpost
 
 
 class Item():
+    #Refactor this: item prices are static once the program are started, don't need to be saved in every object
     ECTO_ID = 19721 #static id for item: Glob of Ectoplasm
     item_prices = tradingpost.item_prices
     ecto_price = item_prices.loc[item_prices["id"] == ECTO_ID,"sell_price"].item()
@@ -36,6 +37,7 @@ class Item():
         self.salvageKit = salvageKit
         self.buy_price = self.item_prices.loc[self.item_prices["id"] == self.item_id,"buy_price"].iloc[0]
         self.sell_price = self.item_prices.loc[self.item_prices["id"] == self.item_id,"sell_price"].iloc[0]
+        self.bought_7d = self.item_prices.loc[self.item_prices["id"] == self.item_id,"7d_buy_sold"].iloc[0]
         
         self.detailed_type = data[4]
         self.upgrade_id = data[5]

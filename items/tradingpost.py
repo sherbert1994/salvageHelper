@@ -10,7 +10,7 @@ import pandas as pd
 
 # returns all items with their prices. Items that have no price (NaN or 0) are omitted
 def get_item_prices() -> pd.DataFrame:
-    url = "https://api.datawars2.ie/gw2/v1/items/csv?fields=id,buy_price,sell_price"
+    url = "https://api.datawars2.ie/gw2/v1/items/csv?fields=id,buy_price,sell_price,7d_buy_sold,7d_sell_sold"
     
     item_prices = pd.read_csv(url)
     #Drop the rows where both buy_price and sell_price are NaN

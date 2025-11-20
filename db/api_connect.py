@@ -25,6 +25,7 @@ def get_ids(endpoint):
         
     return ids
 
+
 def get_json_data(endpoint, ids):
     
     #ids are integers, we need to turn them to string to be able to join them
@@ -118,6 +119,7 @@ def update_items():
         print(f"Finished iteration {int((i/100) + 1)} out of {iterations}") 
         
     push_to_database(param_query, params_list)
+
 
 def __difference(all_ids, known_ids):
     all_ids = set(all_ids)
